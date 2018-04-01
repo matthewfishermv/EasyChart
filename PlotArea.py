@@ -20,3 +20,9 @@ class PlotArea():
 
 	def draw_rectangle(self, x1, y1, x2, y2):
 		self.canvas.create_rectangle(x1, y1, x2, y2)
+
+	def add_text(self, x, y, content):
+		self.canvas.create_text(x, y, text = content)
+
+	def clear(self):
+		self.canvas.delete(ALL)

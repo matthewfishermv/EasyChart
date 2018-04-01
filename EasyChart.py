@@ -25,9 +25,12 @@ class EasyChart(Frame):
 
 		self.file_menu = Menu(self.main_menu)
 		self.main_menu.add_cascade(label = 'File', menu = self.file_menu)
-		self.file_menu.add_command(label = 'New')
+		self.file_menu.add_command(label = 'Generate Chart', command = self.draw_chart)
+		self.file_menu.add_separator()
+		self.file_menu.add_command(label = 'Exit', command = quit)
 
-		Chart(self.plot_area)
+		# Create chart
+		self.current_chart = Chart(self.plot_area)
 
 	def init_menu(self):
 
@@ -43,14 +46,13 @@ class EasyChart(Frame):
 
 	def init_toolbar(self):
 
-		# Create a new frame at top of main window for toolbar items
+		"""Creates a new frame at top of main window for toolbar items"""
+
 		toolbar = Frame(self, bg = '#88ade8')
 		toolbar.pack(fill = X)
 
-		button_rand_column = Button(toolbar, text = "Random column chart", command = lambda: draw_chart('column'))
-		button_rand_column.pack(side = LEFT, padx = 10, pady = 10)
-
-		button_rand_column = Button(toolbar, text = "Random scatter plot", command = lambda: draw_chart('scatter'))
+		# Buttons
+		button_rand_column = Button(toolbar, text = "Generate Chart", command = lambda: self.draw_chart('column'))
 		button_rand_column.pack(side = LEFT, padx = 10, pady = 10)
 
 		return toolbar
@@ -58,7 +60,7 @@ class EasyChart(Frame):
 	def init_plot_area(self):
 
 		# Create plot area
-		plot_area = PlotArea(self, width = 600, height = 400)
+		plot_area = PlotArea(self, width = 500, height = 300)
 
 		return plot_area
 
@@ -77,6 +79,10 @@ class EasyChart(Frame):
 		status_label.pack(fill = X)
 
 		return status_label
+
+	def draw_chart(self, type = 'column'):
+		self.plot_area.clear()
+		self.current_chart = Chart(self.plot_area)
 
 
 if __name__ == "__main__":
