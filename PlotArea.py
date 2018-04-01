@@ -1,28 +1,79 @@
 from tkinter import *
+from Chart import *
 
 
 class PlotArea():
 
 	def __init__(self, frame, width = 400, height = 400):
+		"""Creates a new PlotArea object.
+
+		Args:
+			frame: The main window, to which the PlotArea belongs.
+			width: The total usable width of the PlotArea.
+			height: The total usable height of the PlotArea.
+		"""
+
 		self.width = width
 		self.height = height
 		self.canvas = Canvas(frame, width = self.width, height = self.height, bg ='white')
 		self.canvas.pack()
 
 	def get_width(self):
+		"""Returns the width of the PlotArea."""
+
 		return self.width
 
 	def get_height(self):
+		"""Returns the height of the PlotArea."""
+
 		return self.height
 
-	def draw_line(self, x1, y1, x2, y2):
-		self.canvas.create_line(x1, y1, x2, y2)
+	def draw_line(self, x1, y1, x2, y2, stroke_weight = 1, stroke_color = 'black'):
+		"""Draws a line on the plot area.
 
-	def draw_rectangle(self, x1, y1, x2, y2):
-		self.canvas.create_rectangle(x1, y1, x2, y2)
+		Args:
+			x1: The x-coordinate for the first corner (x1, y1).
+			y1: The y-coordinate for the first corner (x1, y1).
+			x2: The x-coordinate for the second corner (x2, y2).
+			y2: The y-coordinate for the second corner (x2, y2).
+			stroke_weight: The thickness of the line. Default is 1.
+			stroke_color: The color of the line. Can be color name like 'light blue' or hex string. Deafult is 'black'.
+		"""
 
-	def add_text(self, x, y, content):
-		self.canvas.create_text(x, y, text = content)
+		self.canvas.create_line(x1, y1, x2, y2, width = stroke_weight, fill = stroke_color)
+
+	def draw_rectangle(self, x1, y1, x2, y2, stroke_weight = 1, stroke_color = '#88aae0', fill_color = '#a8c6f7'):
+		"""Draws a rectangle bounded by (x1, y1) and (x2, y2).
+
+		Args:
+			x1: The x-coordinate for the first corner (x1, y1).
+			y1: The y-coordinate for the first corner (x1, y1).
+			x2: The x-coordinate for the second corner (x2, y2).
+			y2: The y-coordinate for the second corner (x2, y2).
+			stroke_weight: The thickness of the ouline. Default is 1.
+			stroke_color: The color of the outline. Can be color name like 'light blue' or hex string. Deafult is '#88aae0'.
+			fill_color: The color of the inside of the rectangle. Default is '#a8c6f7'.
+		"""
+
+		self.canvas.create_rectangle(x1, y1, x2, y2, fill = fill_color, outline = stroke_color, width = stroke_weight)
+
+	def add_text(self, x, y, message):
+		"""Adds text at the given coordinates (x,y).
+
+		Args:
+			x: The x-coordinate of the text (x, y).
+			y: The y-coordinate of the text (x, y).
+			message: The string of text to add at (x, y).
+		"""
+
+		self.canvas.create_text(x, y, text = message)
 
 	def clear(self):
+		"""Clears the canvas of all elements."""
+
 		self.canvas.delete(ALL)
+
+	def add_chart(self):
+		"""Adds a chart to the PlotArea."""
+
+		return Chart(self)

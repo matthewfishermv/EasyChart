@@ -5,8 +5,19 @@ from PlotArea import *
 
 class Chart(object):
 
-	def __init__(self, plot_area, type = 'column', num_values = 10, low_value = 0, high_value = 100, buffer_size = 20):
-		self.DEBUG_LEVEL = 3	# 0, 1, 2, or 3
+	def __init__(self, plot_area, type = 'column', num_values = 10, low_value = 0, high_value = 100, buffer_size = 40):
+		"""Creates a new chart object.
+
+		Args:
+			plot_area: The plot area, on which the chart will be drawn (PlotArea object).
+			type: The type of chart to draw. Types: 'column'.
+			num_values: The number of data points to plot.
+			low_value: The lowest value in the data set (min).
+			high_value: The highest value in the data set (max).
+			buffer_size: The number of pixels of padding to add around the entire chart.
+		"""
+
+		self.DEBUG_LEVEL = 0	# 0, 1, 2, or 3
 
 		# DEBUG
 		if self.DEBUG_LEVEL >= 1:
@@ -21,26 +32,55 @@ class Chart(object):
 		self.plot_height = plot_area.get_height() - (self.buffer_size * 2)
 		self.x_width = self.plot_width / num_values
 
-		# Create a list of random values within parameters
-		values = self.get_random_values(num_values)
-		self.plot_values(values)
-
 		## DEBUG
 		if (self.DEBUG_LEVEL >= 1):
+			# Print vairable values
 			print("low and high values: ", str(self.low_value) + ", " + str(self.high_value))
 			print("plot_width: " + str(self.plot_width))
 			print("plot_height: " + str(self.plot_height))
 			print("x_width: " + str(self.x_width))
+		if (self.DEBUG_LEVEL >= 3):
+			# Draw plot area bounding box
+			bounds_x_start = self.buffer_size
+			bounds_y_start = self.buffer_size
+			bounds_x_end = bounds_x_start + self.plot_width
+			bounds_y_end = bounds_y_start + self.plot_height
+
+			self.plot_area.draw_rectangle(bounds_x_start, bounds_y_start, bounds_x_end, bounds_y_end,
+				fill_color ='', stroke_color = 'red')
+
+		# Create a list of random values within parameters
+		values = self.get_random_values(num_values)
+		self.plot_values(values)
+
+		# Draw axes
+		self.draw_axes()
 
 	def get_random_values(self, num_values):
+		"""Produces a list a randomly-generated values that fall within the parameters of the Chart.
+
+		Args:
+			num_values: The number of random values to generate.
+		Returns:
+			List: The list of randomly-generated values.
+		"""
+
 		values = []
 
+		# Add random values between low_value and high_value
 		for x in range(num_values):
 			values.append(randint(self.low_value, self.high_value))
 
 		return values
 
 	def plot_values(self, values):
+		"""Plots the values graphically on the PlotArea.
+
+		Args:
+			values: The list of values to plot.
+
+		"""
+
 		x_index = 0
 
 		largest = max(values)
@@ -54,11 +94,33 @@ class Chart(object):
 			y_end = y_start - ((value / largest) * (self.plot_height))
 
 			# Draw column and value label
-			self.plot_area.draw_rectangle(x_start, y_start, x_end, y_end)
-			self.plot_area.add_text(x_start + (self.x_width / 2), y_start + 10, value)
+			self.plot_area.draw_rectangle(x_start, y_start, x_end, y_end, stroke_weight = 2)
+			self.plot_area.add_text(x_start + (self.x_width / 2), y_start + 30, value)
 
 			x_index += 1
 
 			## DEBUG
 			if (self.DEBUG_LEVEL >= 3):
 				print (str(value) + ": " + str([x_start, y_start, x_end, y_end]))
+
+	def draw_axes(self, padding = 10, stroke_weight = 2):
+		"""Draws the x- and y-axis on the PlotArea.
+
+		Args:
+			padding: The number of pixels between plot area and axes.
+			stroke_weight: The thickness of the axis lines.
+		"""
+		
+		# Origin coordinates
+		origin_x = self.buffer_size - padding
+		origin_y = self.plot_height + self.buffer_size + padding
+
+		# Draw y-axis
+		top_y = self.buffer_size - padding
+
+		self.plot_area.draw_line(origin_x, origin_y, origin_x, top_y, stroke_weight = stroke_weight)
+
+		# Draw x-axis
+		right_x = self.buffer_size + self.plot_width + padding
+
+		self.plot_area.draw_line(origin_x, origin_y, right_x, origin_y, stroke_weight = stroke_weight)
