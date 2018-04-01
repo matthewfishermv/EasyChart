@@ -1,30 +1,30 @@
 from tkinter import *
-from Chart import *
 
 
 class PlotArea():
 
-	def __init__(self, frame, width = 400, height = 400):
+	def __init__(self, frame, width, height):
 		"""Creates a new PlotArea object.
 
 		Args:
-			frame: The main window, to which the PlotArea belongs.
-			width: The total usable width of the PlotArea.
-			height: The total usable height of the PlotArea.
+			frame: The main window, to which the plot area belongs.
+			width: The total usable width of the plot area.
+			height: The total usable height of the plot area.
 		"""
 
-		self.width = width
-		self.height = height
-		self.canvas = Canvas(frame, width = self.width, height = self.height, bg ='white')
+		self.canvas = Canvas(frame, width = width, height = height, bg ='white')
 		self.canvas.pack()
 
+	def set_width(self, width):
+		self.width = width;
+
 	def get_width(self):
-		"""Returns the width of the PlotArea."""
+		"""Returns the width of the plot area."""
 
 		return self.width
 
 	def get_height(self):
-		"""Returns the height of the PlotArea."""
+		"""Returns the height of the plot area."""
 
 		return self.height
 
@@ -57,8 +57,8 @@ class PlotArea():
 
 		self.canvas.create_rectangle(x1, y1, x2, y2, fill = fill_color, outline = stroke_color, width = stroke_weight)
 
-	def add_text(self, x, y, message):
-		"""Adds text at the given coordinates (x,y).
+	def draw_text(self, x, y, message):
+		"""Draw text at the given coordinates (x,y).
 
 		Args:
 			x: The x-coordinate of the text (x, y).
@@ -73,7 +73,5 @@ class PlotArea():
 
 		self.canvas.delete(ALL)
 
-	def add_chart(self):
-		"""Adds a chart to the PlotArea."""
-
-		return Chart(self)
+	def resize(self, w, h):
+		self.canvas.config(width = w, height = h)
