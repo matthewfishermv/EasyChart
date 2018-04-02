@@ -15,12 +15,12 @@ class MainWindow(Tk):
 		self.title("EasyChart")
 
 		# Set default configuration values
-		self.default_width = 800
+		self.default_width = 600
 		self.default_height = 400
 		self.default_buffer_size = 50
 
 		# Initialize object variables
-		self.toolbar = self.init_toolbar()
+		#self.toolbar = self.init_toolbar()
 		self.main_frame = Frame(self)
 		self.main_frame.pack()
 		self.plot_area = self.init_plot_area()
@@ -32,30 +32,23 @@ class MainWindow(Tk):
 		# Initialize menus
 		self.main_menu = Menu(self)
 		self.config(menu = self.main_menu)
+
 		self.file_menu = Menu(self.main_menu)
 		self.main_menu.add_cascade(label = 'File', menu = self.file_menu)
 		self.file_menu.add_command(label = 'Generate Chart', command = self.draw_new_chart)
 		self.file_menu.add_command(label = 'Clear Chart', command = self.clear_plot_area)
 		self.file_menu.add_separator()
 		self.file_menu.add_command(label = 'Exit', command = quit)		
+
 		self.edit_menu = Menu(self.main_menu)
 		self.main_menu.add_cascade(label = 'Edit', menu = self.edit_menu)
 		self.edit_menu.add_command(label = 'Settings', command = self.change_settings)
 
+		self.view_menu = Menu(self.main_menu)
+		self.main_menu.add_cascade(label = 'View', menu = self.view_menu)
+		self.view_menu.add_command(label = 'Full Screen', command = self.toggle_full_screen)
+
 		self.mainloop()
-
-	def init_menu(self):
-		"""Creates a new menu with all sub-menus."""
-
-		# Create a new menu in the main window
-		new_menu = Menu(self)
-
-		# File menu
-		file_menu = Menu(new_menu)
-		new_menu.add_cascasde(label = "File", menu = file_menu)
-		file_menu.add_command(label = "New")
-
-		return new_menu
 
 	def init_toolbar(self):
 		"""Creates a new frame at top of main window with toolbar items.
@@ -86,7 +79,6 @@ class MainWindow(Tk):
 			PlotArea: The new PlotArea.
 		"""
 
-		# Create plot area
 		plot_area = PlotArea(self, width = self.default_width, height = self.default_height)
 
 		return plot_area
@@ -104,8 +96,7 @@ class MainWindow(Tk):
 		Returns:
 			Frame: The new status bar.
 		"""
-
-		# Create a new frame at bottom of main window for status
+		
 		status_bar = Frame(self)
 		status_bar.pack(side = BOTTOM, fill = X)
 
@@ -156,5 +147,12 @@ class MainWindow(Tk):
 		self.set_status_label('Plot area cleared.')
 
 	def change_settings(self):
+		"""Launches the settings window and lets user configure settings."""
+
 		PlotConfigurationWindow(self)
 		self.draw_new_chart()
+
+	def toggle_full_screen(self):
+		"""Toggles between fullscreen and windowed mode."""
+
+		self.attributes('-fullscreen', not self.attributes('-fullscreen'))

@@ -6,7 +6,7 @@ class Chart(object):
 
 	DEBUG_LEVEL = 0	# 0, 1, 2, or 3
 
-	def __init__(self, plot_area, configuration, type = 'column', num_values = 10, low_value = 0, high_value = 100):
+	def __init__(self, plot_area, configuration, type = 'column', num_values = 25, low_value = 0, high_value = 100):
 		"""Creates a new chart object.
 
 		Args:
@@ -15,7 +15,6 @@ class Chart(object):
 			num_values: The number of data points to plot.
 			low_value: The lowest value in the data set (min).
 			high_value: The highest value in the data set (max).
-			buffer_size: The number of pixels of padding to add around the entire chart.
 		"""
 
 		# DEBUG
@@ -53,6 +52,9 @@ class Chart(object):
 		# Draw axes
 		self.draw_axes()
 
+		# Draw title
+		self.draw_title()
+
 		# DEBUG
 		if self.DEBUG_LEVEL >= 1:
 			print("----------------")
@@ -89,14 +91,14 @@ class Chart(object):
 		# Plot values
 		for value in values:
 			# Set bounds of current value
-			x_start = self.configuration.get_buffer_size() + (self.x_width * x_index)
+			x_start = self.configuration.get_buffer_left() + (self.x_width * x_index)
 			x_end = x_start + self.x_width
-			y_start = self.configuration.get_chart_height() + self.configuration.get_buffer_size()
+			y_start = self.configuration.get_chart_height() + self.configuration.get_buffer_top()
 			y_end = y_start - ((value / largest) * (self.configuration.get_chart_height()))
 
 			# Draw column and value label
 			self.plot_area.draw_rectangle(x_start, y_start, x_end, y_end, stroke_weight = 2)
-			self.plot_area.draw_text(x_start + (self.x_width / 2), y_start + 30, value)
+			self.plot_area.draw_text(x_start + (self.x_width / 2), y_start + 30, value, font = ('Helvetica', 8))
 
 			x_index += 1
 
@@ -113,13 +115,18 @@ class Chart(object):
 		"""
 		
 		# Origin coordinates
-		origin_x = self.configuration.get_buffer_size() - padding
-		origin_y = self.configuration.get_chart_height() + self.configuration.get_buffer_size() + padding
+		origin_x = self.configuration.get_buffer_left() - padding
+		origin_y = self.configuration.get_chart_height() + self.configuration.get_buffer_top() + padding
 
 		# Draw y-axis
-		top_y = self.configuration.get_buffer_size() - padding
+		top_y = self.configuration.get_buffer_top() - padding
 		self.plot_area.draw_line(origin_x, origin_y, origin_x, top_y, stroke_weight = stroke_weight)
 
 		# Draw x-axis
-		right_x = self.configuration.get_buffer_size() + self.configuration.get_chart_width() + padding
+		right_x = self.configuration.get_buffer_left() + self.configuration.get_chart_width() + padding
 		self.plot_area.draw_line(origin_x, origin_y, right_x, origin_y, stroke_weight = stroke_weight)
+
+	def draw_title(self):
+		loc = (self.configuration.get_buffer_left() + (self.configuration.get_chart_width() / 2))
+
+		self.plot_area.draw_text(loc, 20, self.configuration.get_title(), font = ("Helvetica", 15))
