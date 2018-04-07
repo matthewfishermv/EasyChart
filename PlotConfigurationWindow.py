@@ -5,28 +5,28 @@ from ConfigurationWindow import *
 
 class PlotConfigurationWindow(ConfigurationWindow):
 
-	def __init__(self, controller):
+	def __init__(self, controller, target_configuration, title, width, height, force_focus = True):
 		"""Creates a plot configuration window, where the user can change plot settings.
+
+		If width and height are not specified, resulting window will size to accomodate its components.
 
 		Args:
 			controller: The MainWindow that controls the application.
+			target_configuration: The Configuration that is changed by changing settings in this ConfigurationWindow.
+			title: The text to display in the title bar.
+			width: The width (pixels) of the PlotConfigurationWindow.
+			height: The height (pixels) of the PlotConfigurationWindow.
+			force_focus: True if window must be destroyed before application continues, False otherwise. Default is False.
 		"""
 
-		Toplevel.__init__(self)
+		ConfigurationWindow.__init__(self, controller, target_configuration, title, width, height, force_focus)
 
 		self.controller = controller
-		self.title("Plot Settings")
 
 		# Display on/off toggle variables
 		self.show_title = BooleanVar()
 		if self.controller.plot_configuration.get_property('show_title') == True: self.show_title.set(True)
 		else: self.show_title.set(False)
-
-		# Get focus
-		self.lift()
-		self.focus_force()
-		self.attributes("-topmost", True)
-		self.grab_set()
 
 		# Chart title
 		self.title_label = Label(self, text = "Title:")

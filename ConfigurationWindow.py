@@ -6,11 +6,13 @@ class ConfigurationWindow(Window):
 	def __init__(self, controller, target_configuration, title, width, height, force_focus = True):
 		"""Creates a new ConfigurationWindow.
 
+		If width and height are not specified, resulting window will size to accomodate its components.
+
 		Args:
 			controller: The MainWindow that controls the application.
 			target_configuration: The Configuration that is changed by changing settings in this ConfigurationWindow.
 			title: The text to display in the title bar.
-			width: The width of the ConfigurationWindow.
+			width: The width (pixels) of the ConfigurationWindow.
 			height: The height (pixels) of the ConfigurationWindow.
 			force_focus: True if window must be destroyed before application continues, False otherwise. Default is False.
 		"""

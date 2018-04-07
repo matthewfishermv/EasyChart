@@ -6,6 +6,8 @@ class Window(Toplevel):
 	def __init__(self, controller, title, width, height, force_focus = False):
 		"""Creates a new window.
 
+		If width and height are not specified, resulting window will size to accomodate its components.
+
 		Args:
 			controller: The MainWindow that controls the application.
 			title: The text to display in the title bar.
@@ -19,8 +21,6 @@ class Window(Toplevel):
 		
 		# Force focus if configured to do so
 		if force_focus: self.force_focus()
-
-		self.mainloop()
 
 	def set_title(self, new_title):
 		"""Sets the window title to new_title.

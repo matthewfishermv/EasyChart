@@ -159,7 +159,7 @@ class MainWindow(Tk):
 	def change_plot_settings(self):
 		"""Launches the plot configuration window to allow user configure plot settings."""
 
-		PlotConfigurationWindow(self)
+		PlotConfigurationWindow(self, self.plot_configuration, 'Plot Settings', 0, 0)
 		self.draw_new_chart()
 
 	def toggle_full_screen(self):
