@@ -26,21 +26,21 @@ class Chart(object):
 		self.configuration = configuration
 		self.low_value = low_value
 		self.high_value = high_value
-		self.x_width = self.configuration.get_chart_width() / num_values
+		self.x_width = self.configuration.get_property('chart_width') / num_values
 
 		## DEBUG
 		if self.DEBUG_LEVEL >= 1:
 			# Print vairable values
 			print("low and high values: ", str(self.low_value) + ", " + str(self.high_value))
-			print("chart_width: " + str(self.configuration.get_chart_width()))
-			print("chart_height: " + str(self.configuration.get_chart_height()))
+			print("chart_width: " + str(self.configuration.get_property('chart_width')))
+			print("chart_height: " + str(self.configuration.get_property('chart_height')))
 			print("x_width: " + str(self.x_width))
 		if self.DEBUG_LEVEL >= 3:
 			# Draw plot area bounding box
-			bounds_x_start = self.configuration.get_buffer_size()
-			bounds_y_start = self.configuration.get_buffer_size()
-			bounds_x_end = bounds_x_start + self.configuration.get_chart_width()
-			bounds_y_end = bounds_y_start + self.configuration.get_chart_height()
+			bounds_x_start = self.configuration.get_property('margin_left')
+			bounds_y_start = self.configuration.get_property('margin_top')
+			bounds_x_end = bounds_x_start + self.configuration.get_property('chart_width')
+			bounds_y_end = bounds_y_start + self.configuration.get_property('chart_height')
 
 			self.plot_area.draw_rectangle(bounds_x_start, bounds_y_start, bounds_x_end, bounds_y_end,
 				fill_color ='', stroke_color = 'red')
@@ -53,7 +53,7 @@ class Chart(object):
 		self.draw_axes()
 
 		# Draw title
-		self.draw_title()
+		if self.configuration.get_property('show_title') == True: self.draw_title()
 
 		# DEBUG
 		if self.DEBUG_LEVEL >= 1:
@@ -81,7 +81,6 @@ class Chart(object):
 
 		Args:
 			values: The list of values to plot.
-
 		"""
 
 		x_index = 0
@@ -91,10 +90,10 @@ class Chart(object):
 		# Plot values
 		for value in values:
 			# Set bounds of current value
-			x_start = self.configuration.get_buffer_left() + (self.x_width * x_index)
+			x_start = self.configuration.get_property('margin_left') + (self.x_width * x_index)
 			x_end = x_start + self.x_width
-			y_start = self.configuration.get_chart_height() + self.configuration.get_buffer_top()
-			y_end = y_start - ((value / largest) * (self.configuration.get_chart_height()))
+			y_start = self.configuration.get_property('chart_height') + self.configuration.get_property('margin_top')
+			y_end = y_start - ((value / largest) * (self.configuration.get_property('chart_height')))
 
 			# Draw column and value label
 			self.plot_area.draw_rectangle(x_start, y_start, x_end, y_end, stroke_weight = 2)
@@ -115,18 +114,18 @@ class Chart(object):
 		"""
 		
 		# Origin coordinates
-		origin_x = self.configuration.get_buffer_left() - padding
-		origin_y = self.configuration.get_chart_height() + self.configuration.get_buffer_top() + padding
+		origin_x = self.configuration.get_property('margin_left') - padding
+		origin_y = self.configuration.get_property('chart_height') + self.configuration.get_property('margin_top') + padding
 
 		# Draw y-axis
-		top_y = self.configuration.get_buffer_top() - padding
+		top_y = self.configuration.get_property('margin_top') - padding
 		self.plot_area.draw_line(origin_x, origin_y, origin_x, top_y, stroke_weight = stroke_weight)
 
 		# Draw x-axis
-		right_x = self.configuration.get_buffer_left() + self.configuration.get_chart_width() + padding
+		right_x = self.configuration.get_property('margin_left') + self.configuration.get_property('chart_width') + padding
 		self.plot_area.draw_line(origin_x, origin_y, right_x, origin_y, stroke_weight = stroke_weight)
 
 	def draw_title(self):
-		loc = (self.configuration.get_buffer_left() + (self.configuration.get_chart_width() / 2))
+		loc = (self.configuration.get_property('margin_left') + (self.configuration.get_property('chart_width') / 2))
 
-		self.plot_area.draw_text(loc, 20, self.configuration.get_title(), font = ("Helvetica", 15))
+		self.plot_area.draw_text(loc, 20, self.configuration.get_property('title'), font = ("Helvetica", 15))
